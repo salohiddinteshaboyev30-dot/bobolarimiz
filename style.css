@@ -1,0 +1,155 @@
+body{
+margin:0;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+font-family:Arial;
+color:white;
+text-align:center;
+}
+
+#title{
+font-size:60px;
+margin-top:30px;
+font-family:'Dancing Script',cursive;
+letter-spacing:2px;
+
+/* BOBO KALONLARIMIZ EFFEKTI */
+animation: glowTitle 3s ease-in-out infinite alternate;
+}
+
+#menuBtn{
+position:fixed;
+top:20px;
+left:20px;
+font-size:25px;
+padding:10px 15px;
+border:none;
+background:white;
+border-radius:8px;
+cursor:pointer;
+}
+
+#menuPanel{
+position:fixed;
+left:-260px;
+top:0;
+width:260px;
+height:100%;
+background:#111;
+transition:0.4s;
+padding-top:80px;
+}
+
+.menuItem{
+padding:15px;
+cursor:pointer;
+border-bottom:1px solid #333;
+}
+
+#translateMenu,
+#filterMenu{
+display:none;
+background:#1b1b1b;
+}
+
+/* PAGES MENU */
+
+#pagesMenu{
+display:none;
+margin-top:10px;
+}
+
+.lang{
+padding:10px;
+cursor:pointer;
+}
+
+.lang:hover{
+background:#333;
+}
+
+#search{
+width:60%;
+padding:12px;
+font-size:16px;
+border-radius:8px;
+border:none;
+margin-top:20px;
+}
+
+#voiceBtn{
+padding:12px;
+font-size:18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.container{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:20px;
+padding:40px;
+}
+
+.card{
+width:200px;
+background:white;
+color:black;
+border-radius:10px;
+padding:15px;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.05);
+}
+
+.card img{
+width:100%;
+border-radius:8px;
+}
+
+@keyframes glowTitle{
+
+0%{
+text-shadow:0 0 5px #fff,
+0 0 10px #00ffff,
+0 0 20px #00ffff;
+transform:scale(1);
+}
+
+100%{
+text-shadow:0 0 10px #fff,
+0 0 20px #00ffff,
+0 0 40px #00ffff;
+transform:scale(1.05);
+}
+
+}
+
+#title{
+animation: glowTitle 3s ease-in-out infinite alternate;
+}
+
+@keyframes glowTitle{
+
+0%{
+text-shadow:0 0 5px #fff,
+0 0 15px #00ffff,
+0 0 25px #00ffff;
+transform:scale(1);
+}
+
+100%{
+text-shadow:0 0 10px #fff,
+0 0 25px #00ffff,
+0 0 50px #00ffff;
+transform:scale(1.08);
+}
+
+}
+
+#title{
+animation: glowTitle 3s ease-in-out infinite alternate !important;
+}
