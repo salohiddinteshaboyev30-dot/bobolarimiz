@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<title>Bobo Kalonlarimiz</title>
+
+<style>
+
+/* VIDEO BACKGROUND */
+
+#bgVideo{
+position:fixed;
+right:0;
+bottom:0;
+min-width:100%;
+min-height:100%;
+object-fit:cover;
+z-index:-2;
+}
+
+/* BODY */
+
+body{
+margin:0;
+font-family:Arial;
+color:white;
+text-align:center;
+}
+
+/* qoraroq fon */
+
+body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.55);
+z-index:-1;
+}
+
+/* HEADER */
+
+header{
+font-size:55px;
+padding:35px;
+color:#6ad8ff;
+font-weight:bold;
+}
+
+/* SEARCH */
+
+#search{
+padding:15px;
+width:320px;
+font-size:18px;
+border-radius:10px;
+border:none;
+outline:none;
+}
+
+/* VOICE BUTTON */
+
+#voiceBtn{
+padding:15px;
+font-size:18px;
+border:none;
+border-radius:10px;
+margin-left:10px;
+cursor:pointer;
+}
+
+/* GRID */
+
+.container{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:30px;
+padding:40px;
+}
+
+/* CARD */
+
+.card{
+background:rgba(0,0,0,0.6);
+padding:15px;
+border-radius:20px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.card:hover{
+transform:scale(1.08);
+background:rgba(0,0,0,0.8);
+}
+
+.card img{
+width:100%;
+height:200px;
+object-fit:cover;
+border-radius:10px;
+}
+
+.name{
+font-size:20px;
+margin-top:10px;
+color:#6ad8ff;
+}
+
+/* MENU BUTTON */
+
+#menuBtn{
+position:fixed;
+top:20px;
+right:20px;
+background:#6ad8ff;
+border:none;
+padding:12px 16px;
+border-radius:10px;
+font-size:20px;
+cursor:pointer;
+z-index:1000;
+}
+
+/* MENU PANEL */
+
+#menuPanel{
+position:fixed;
+top:70px;
+right:20px;
+background:#1b2a33;
+padding:15px;
+border-radius:15px;
+display:none;
+width:220px;
+}
+
+/* MENU ITEM */
+
+.menuItem{
+padding:10px;
+cursor:pointer;
+border-radius:8px;
+}
+
+.menuItem:hover{
+background:#6ad8ff;
+color:black;
+}
+
+/* TRANSLATE MENU */
+
+#translateMenu{
+display:none;
+margin-top:10px;
+}
+
+/* FILTER MENU */
+
+#filterMenu{
+display:none;
+margin-top:10px;
+}
+
+.lang{
+padding:8px;
+cursor:pointer;
+border-radius:6px;
+}
+
+.lang:hover{
+background:#6ad8ff;
+color:black;
+}
+
+</style>
+</head>
+
+<body>
+
+<video autoplay muted loop id="bgVideo">
+<source src="bobokalonlar.mp4" type="video/mp4">
+</video>
+
+<header id="title">Bobo Kalonlarimiz</header>
+
+<button id="menuBtn">☰</button>
+
+<div id="menuPanel">
+
+<div class="menuItem" onclick="toggleTranslate()">🌐 Translate</div>
+
+<div id="translateMenu">
+<div class="lang" onclick="changeLang('uz')">🇺🇿 Uzbek</div>
+<div class="lang" onclick="changeLang('en')">🇬🇧 English</div>
+<div class="lang" onclick="changeLang('ru')">🇷🇺 Russian</div>
+<div class="lang" onclick="changeLang('ar')">🇸🇦 Arabic</div>
+</div>
+
+<div class="menuItem" onclick="toggleFilter()">📂 Filter</div>
+
+<div id="filterMenu">
+<div class="lang" onclick="filterPeople('all')">🌍 Hammasi</div>
+<div class="lang" onclick="filterPeople('olim')">📚 Olimlar</div>
+<div class="lang" onclick="filterPeople('sarkarda')">⚔️ Sarkardalar</div>
+<div class="lang" onclick="filterPeople('yozuvchi')">✍️ Yozuvchilar</div>
+<div class="lang" onclick="filterPeople('din')">🕌 Din allomalari</div>
+</div>
+
+</div>
+
+<br>
+
+<input id="search" placeholder="Bobo kalon nomini yozing...">
+<button id="voiceBtn">🎤</button>
+
+<div class="container" id="container"></div>
+
+<script>
+
+/* BOBOLAR */
+
+const bobolar=[
+
+"Alisher Navoiy",
+"Amir Temur",
+"Mirzo Ulug‘bek",
+"Zahiriddin Bobur",
+"Ibn Sino",
+"Muhammad al-Xorazmiy",
+"Al-Beruniy",
+"Ahmad al-Farg‘oniy",
+"Imom al-Buxoriy",
+"Imom at-Termiziy",
+"Ahmad Yassaviy",
+"Bahouddin Naqshband",
+"Najmiddin Kubro",
+"Mahmud Qoshg‘ariy",
+"Mahmud Zamaxshariy",
+"Abu Mansur Moturidiy",
+"Al-Farobiy",
+"Abdurauf Fitrat",
+"Abdulla Qodiriy",
+"Cho‘lpon",
+"Hamza Hakimzoda Niyoziy",
+"Munavvar Qori",
+"Mahmudxo‘ja Behbudiy",
+
+"To'maris",
+"Jaloliddin Manguberdi",
+"Nodira Begim",
+"Uvaysiy",
+"Ahmad al-Farg‘oniy",
+"Muhammad Yusuf",
+"Qutayba ibn Muslim"
+
+];
+
+/* KATEGORIYA */
+
+const categories={
+
+"Alisher Navoiy":"yozuvchi",
+"Amir Temur":"sarkarda",
+"Mirzo Ulug‘bek":"olim",
+"Zahiriddin Bobur":"yozuvchi",
+"Ibn Sino":"olim",
+"Muhammad al-Xorazmiy":"olim",
+"Al-Beruniy":"olim",
+"Ahmad al-Farg‘oniy":"olim",
+"Imom al-Buxoriy":"din",
+"Imom at-Termiziy":"din",
+"Ahmad Yassaviy":"din",
+"Bahouddin Naqshband":"din",
+"Najmiddin Kubro":"din",
+"Mahmud Qoshg‘ariy":"olim",
+"Mahmud Zamaxshariy":"olim",
+"Abu Mansur Moturidiy":"din",
+"Al-Farobiy":"olim",
+"Abdurauf Fitrat":"yozuvchi",
+"Abdulla Qodiriy":"yozuvchi",
+"Cho‘lpon":"yozuvchi",
+"Hamza Hakimzoda Niyoziy":"yozuvchi",
+"Munavvar Qori":"yozuvchi",
+"Mahmudxo‘ja Behbudiy":"yozuvchi",
+
+"To'maris":"sarkarda",
+"Jaloliddin Manguberdi":"sarkarda",
+"Nodira Begim":"yozuvchi",
+"Uvaysiy":"yozuvchi",
+"Ahmad al-Farg‘oniy":"olim",
+"Muhammad Yusuf":"yozuvchi",
+"Qutayba ibn Muslim":"sarkarda"
+
+};
+
+/* RASMLAR */
+
+const images={
+
+"Alisher Navoiy":"download (1).jpeg",
+"Amir Temur":"download (2).jpeg",
+"Mirzo Ulug‘bek":"download (3).jpeg",
+"Zahiriddin Bobur":"download (4).jpeg",
+"Ibn Sino":"download (5).jpeg",
+"Muhammad al-Xorazmiy":"download (6).jpeg",
+"Al-Beruniy":"download (7).jpeg",
+"Ahmad al-Farg‘oniy":"download (8).jpeg",
+"Imom al-Buxoriy":"download (9).jpeg",
+"Imom at-Termiziy":"download (10).jpeg",
+"Ahmad Yassaviy":"download (11).jpeg",
+"Bahouddin Naqshband":"download (12).jpeg",
+"Najmiddin Kubro":"download (13).jpeg",
+"Mahmud Qoshg‘ariy":"download (14).jpeg",
+"Mahmud Zamaxshariy":"download (15).jpeg",
+"Abu Mansur Moturidiy":"download (16).jpeg",
+"Al-Farobiy":"download (17).jpeg",
+"Abdurauf Fitrat":"download (18).jpeg",
+"Abdulla Qodiriy":"download (19).jpeg",
+"Cho‘lpon":"download (20).jpeg",
+"Hamza Hakimzoda Niyoziy":"download (21).jpeg",
+"Munavvar Qori":"download (22).jpeg",
+"Mahmudxo‘ja Behbudiy":"download (23).jpeg",
+
+"To'maris":"download (24).jpeg",
+"Jaloliddin Manguberdi":"download (25).jpeg",
+"Nodira Begim":"download (26).jpeg",
+"Uvaysiy":"download (27).jpeg",
+"Ahmad al-Farg‘oniy":"download (28).jpeg",
+"Muhammad Yusuf":"download (29).jpeg",
+"Qutayba ibn Muslim":"download (30).jpeg"
+
+};
+
+const container=document.getElementById("container");
+const search=document.getElementById("search");
+
+function showCards(list){
+
+container.innerHTML="";
+
+list.forEach(name=>{
+
+const card=document.createElement("div");
+card.className="card";
+
+let img=images[name] ||
+"https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/No_Image_Available.jpg/240px-No_Image_Available.jpg";
+
+card.innerHTML=`
+<img src="${img}">
+<div class="name">${name}</div>
+`;
+
+card.onclick=()=>{
+window.open("https://uz.wikipedia.org/wiki/"+name.replaceAll(" ","_"));
+};
+
+container.appendChild(card);
+
+});
+
+}
+
+showCards(bobolar);
+
+search.addEventListener("keyup",()=>{
+
+let value=search.value.toLowerCase();
+
+let filtered=bobolar.filter(person=>
+person.toLowerCase().includes(value)
+);
+
+showCards(filtered);
+
+});
+
+function toggleFilter(){
+
+const menu=document.getElementById("filterMenu");
+
+menu.style.display=
+menu.style.display==="block"?"none":"block";
+
+}
+
+function filterPeople(type){
+
+if(type==="all"){
+showCards(bobolar);
+return;
+}
+
+let filtered=bobolar.filter(name=>
+categories[name]===type
+);
+
+showCards(filtered);
+
+}
+
+const voiceBtn=document.getElementById("voiceBtn");
+
+if('webkitSpeechRecognition' in window){
+
+const recognition=new webkitSpeechRecognition();
+recognition.lang="uz-UZ";
+
+voiceBtn.onclick=()=>{
+recognition.start();
+};
+
+recognition.onresult=(event)=>{
+
+let text=event.results[0][0].transcript;
+
+search.value=text;
+
+search.dispatchEvent(new Event("keyup"));
+
+};
+
+}else{
+
+voiceBtn.style.display="none";
+
+}
+
+const menuBtn=document.getElementById("menuBtn");
+const menuPanel=document.getElementById("menuPanel");
+
+menuBtn.onclick=()=>{
+menuPanel.style.display=
+menuPanel.style.display==="block"?"none":"block";
+};
+
+function toggleTranslate(){
+
+const menu=document.getElementById("translateMenu");
+
+menu.style.display=
+menu.style.display==="block"?"none":"block";
+
+}
+
+const translations={
+
+uz:{
+title:"Bobo Kalonlarimiz",
+search:"Bobo kalon nomini yozing..."
+},
+
+en:{
+title:"Great Ancestors",
+search:"Type ancestor name..."
+},
+
+ru:{
+title:"Великие предки",
+search:"Введите имя..."
+},
+
+ar:{
+title:"أسلافنا العظماء",
+search:"اكتب اسم السلف"
+}
+
+};
+
+function changeLang(lang){
+
+document.getElementById("title").innerText=
+translations[lang].title;
+
+document.getElementById("search").placeholder=
+translations[lang].search;
+
+}
+
+</script>
+
+</body>
+</html>
